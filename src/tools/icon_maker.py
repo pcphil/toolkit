@@ -48,3 +48,34 @@ class IconMaker:
 
         except Exception as e:
             print(f"❌ Error: {e}")
+
+    @staticmethod
+    def make_border_circular(input_path, output_path="output/"):
+        """
+        Crops an image to a circle and saves it as a PNG to preserve transparency.
+        """
+        # Open the image and ensure it's in RGBA mode (supports transparency)
+        img = Image.open(input_path).convert("RGBA")
+        
+        # 1. Square the image by cropping the center
+        width, height = img.size
+        size = min(width, height)
+        left = (width - size) / 2
+        top = (height - size) / 2
+        right = (width + size) / 2
+        bottom = (height + size) / 2
+        img = img.crop((left, top, right, bottom))
+        
+        # 2. Create a mask for the circle
+        mask = Image.new('L', (size, size), 0)
+        draw = ImageDraw.Draw(mask)
+        draw.ellipse((0, 0, size, size), fill=255)
+        
+        # 3. Apply the mask to the alpha channel
+        img.putalpha(mask)
+        
+        if output_path:
+            # Must save as PNG to keep the transparent corners
+            img.save(output_path, "PNG")
+            
+        return img
