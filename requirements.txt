@@ -1,2 +1,6 @@
 pillow
 vtracer
+pyyaml
+requests
+pymupdf
+tqdm
