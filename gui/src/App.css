@@ -1,0 +1,72 @@
+:root {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #0f0f0f;
+  background-color: #f6f6f6;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+}
+
+h1 {
+  font-size: 2rem;
+  margin: 0 0 0.4rem;
+}
+
+.status-line {
+  font-size: 1rem;
+  margin: 0 0 0.75rem;
+}
+
+.hint {
+  color: #888;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+input, button {
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 0.5em 1.1em;
+  font-size: 1em;
+  font-family: inherit;
+  background-color: #fff;
+  transition: border-color 0.2s;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: #396cd8;
+}
+
+button:active {
+  background-color: #e8e8e8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #f6f6f6;
+    background-color: #1e1e1e;
+  }
+
+  input, button {
+    color: #f6f6f6;
+    background-color: #2a2a2a;
+    border-color: #444;
+  }
+
+  .hint {
+    color: #666;
+  }
+}
