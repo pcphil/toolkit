@@ -1,37 +1,49 @@
 import { useState, useEffect } from "react";
+import Base64Panel from "./components/Base64Panel";
+import HasherPanel from "./components/HasherPanel";
+import ConverterPanel from "./components/ConverterPanel";
 import "./App.css";
 
-const API = "http://localhost:8000";
-
-type ServerStatus = "checking" | "ok" | "error";
-
-function StatusBadge({ status }: { status: ServerStatus }) {
-  const map: Record<ServerStatus, { label: string; color: string }> = {
-    checking: { label: "Connecting…", color: "#888" },
-    ok:       { label: "Server online", color: "#4caf50" },
-    error:    { label: "Server offline", color: "#f44336" },
-  };
-  const { label, color } = map[status];
-  return <span style={{ color, fontWeight: 600 }}>{label}</span>;
-}
+const TABS = ["Base64", "Hash File", "Convert"] as const;
+type Tab = (typeof TABS)[number];
 
 export default function App() {
-  const [status, setStatus] = useState<ServerStatus>("checking");
+  const [tab, setTab] = useState<Tab>("Base64");
+  const [serverOk, setServerOk] = useState<boolean | null>(null);
 
   useEffect(() => {
-    fetch(`${API}/health`)
-      .then((r) => r.json())
-      .then(() => setStatus("ok"))
-      .catch(() => setStatus("error"));
+    fetch("http://localhost:8000/health")
+      .then((r) => setServerOk(r.ok))
+      .catch(() => setServerOk(false));
   }, []);
 
   return (
-    <main className="container">
-      <h1>Toolkit</h1>
-      <p className="status-line">
-        <StatusBadge status={status} />
-      </p>
-      <p className="hint">Phase 1 — skeleton complete. Tools coming next.</p>
-    </main>
+    <div className="app">
+      <header className="app-header">
+        <span className="app-title">Toolkit</span>
+        <span
+          className={`server-dot ${serverOk === true ? "ok" : serverOk === false ? "err" : "pending"}`}
+          title={serverOk ? "Server online" : serverOk === false ? "Server offline" : "Connecting…"}
+        />
+      </header>
+
+      <nav className="tabs">
+        {TABS.map((t) => (
+          <button
+            key={t}
+            className={`tab ${t === tab ? "active" : ""}`}
+            onClick={() => setTab(t)}
+          >
+            {t}
+          </button>
+        ))}
+      </nav>
+
+      <main className="content">
+        {tab === "Base64" && <Base64Panel />}
+        {tab === "Hash File" && <HasherPanel />}
+        {tab === "Convert" && <ConverterPanel />}
+      </main>
+    </div>
   );
 }
